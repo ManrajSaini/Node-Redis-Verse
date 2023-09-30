@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <title>API Cache Page</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .para{
+            text-align: center;
+            width : 100vh
+        }
+
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid white;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .search-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button{
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .result-container {
+            text-align: center;
+        }
+
+        .snackbar {
+            display: none;
+            min-width: 250px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>API Cache Page</h1>
+        <p class="para">Here we fetch the real-time <b>github repository stars</b> from github. And API caching is done with help of Redis. Where at <b>1'st request user will get response from Github directly</b> within X miliseconds, after that if user <b>requests again for same repository within 30 seconds of 1'st request, then he will get the cached response from Redis</b> in approx. X/10 miliseconds</p>
+        <div class="search-container">
+            <form id="search-form">
+                <input type="text" class="search-input" name="query" placeholder="Repository name (eg angular/angular)">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+            
+        </div>
+        <div class="result-container" id="result-container">
+            <!-- Results -->
+        </div>
+
+        <a href="/" class="back-button">Home</a>
+
+        <div id="snackbar" class="snackbar"></div>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchForm = document.getElementById('search-form');
+            const resultContainer = document.getElementById('result-container');
+
+            searchForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formData = new FormData(searchForm);
+                const queryValue = formData.get('query');
+
+                const data = {
+                    query: queryValue
+                }; 
+
+                const result = await fetch('api-caching', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(response => response.json());
+                
+                if(result.data.success){
+                    
+                    resultContainer.innerHTML = ''; 
+
+                    const stars = result.data.data.stars;
+                    const retrivalTime = result.data.data.retrivalTime;
+                    const retrivedFrom = result.data.message;
+                    const ttl = result.data.data.ttl;
+
+                    // Create and append elements to the result container
+                    const h2 = document.createElement('h2');
+                    h2.textContent = 'Search Result:';
+                    resultContainer.appendChild(h2);
+
+                    const starsParagraph = document.createElement('p');
+                    starsParagraph.textContent = `Stars: ${stars}`;
+                    resultContainer.appendChild(starsParagraph);
+
+                    const timeParagraph = document.createElement('p');
+                    timeParagraph.textContent = `Retrieval Time: ${retrivalTime} ms`;
+                    resultContainer.appendChild(timeParagraph);
+
+                    const msgParagraph = document.createElement('p');
+                    msgParagraph.textContent = `Retrieved From: ${retrivedFrom}`;
+                    resultContainer.appendChild(msgParagraph);
+
+                    const ttlParagraph = document.createElement('p');
+                    ttlParagraph.textContent = `Time to Live: ${ttl}`;
+                    resultContainer.appendChild(ttlParagraph);
+                    
+                }
+                else{ 
+                    resultContainer.innerHTML = '';
+
+                    const snackbar = document.getElementById('snackbar');
+                    snackbar.textContent = `${result.data.message}`;
+                    snackbar.style.display = 'block';
+
+                    // Hide the snackbar after a few seconds (adjust the delay as needed)
+                    setTimeout(() => {
+                        snackbar.style.display = 'none';
+                        snackbar.textContent = ''; // Clear the message
+                    }, 5000);
+                };
+            });
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <title>Login Page</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            margin-bottom: 20px;
+            
+        }
+
+        .login-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid white;
+            border-radius: 5px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .login-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #login-form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login Page</h1>
+        <div class="login-container">
+            <form id="login-form">
+                <input type="email" class="login-input" name="email" placeholder="Email">
+                <input type="password" class="login-input" name="password" placeholder="Password">
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
+        
+        <div id="login-error" class="login-error"></div>
+    </div>
+
+    <script>
+        // Your JavaScript for handling form submission and displaying errors here
+    </script>
+</body>
+
+</html>

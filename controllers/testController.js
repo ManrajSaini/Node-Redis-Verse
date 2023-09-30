@@ -3,9 +3,20 @@ const axios = require("axios");
 
 const apiCaching = async(req,res) => {
     try{
-        let startTime, endTime, timeRet;
+        let startTime, endTime, timeRet, ttl;
 
-        const repo = req.body.repo;
+        const repo = req.body.query;
+
+        if(!repo){
+            const response = {
+                "success": false,
+                "error_code": 500,
+                "message": "Enter a valid Repository name",
+                "data": null
+            };
+
+            return res.send({data: response}).render("ApiCache");
+        }
 
         startTime = Date.now();
         const value = await redis.get(repo);
@@ -14,21 +25,27 @@ const apiCaching = async(req,res) => {
             endTime = Date.now();
             timeRet = endTime - startTime;
 
-            return res.json({
+            ttl = await redis.ttl(repo);
+
+            const response = {
                 "success": true,
                 "error_code": 200,
-                "message": "Successfully fetched the repository from Redis",
+                "message": "Redis",
                 "data": {
                     "stars": value, 
-                    "retrivalTime": timeRet
+                    "retrivalTime": timeRet,
+                    "ttl": ttl
                 }
-            });
+            };
+
+            return res.send({data: response}).render("ApiCache");
         }
 
         startTime = Date.now();
 
-        const response = await axios.get(`https://api.github.com/repos/${repo}`);
-        const stars = response.data.stargazers_count;
+        const githubResponse = await axios.get(`https://api.github.com/repos/${repo}`);
+
+        const stars = githubResponse.data.stargazers_count;
 
         endTime = Date.now();
         timeRet = endTime - startTime;
@@ -37,65 +54,86 @@ const apiCaching = async(req,res) => {
             await redis.setex(repo, 30, stars);
         }
 
-        return res.json({
+        ttl = await redis.ttl(repo);
+
+        const response = {
             "success": true,
             "error_code": 200,
-            "message": "Successfully fetched the repository from Remote",
+            "message": "Remote",
             "data": {
                 "stars": stars, 
-                "retrivalTime": timeRet
+                "retrivalTime": timeRet,
+                "ttl": ttl
             }
-        });
+        };
+
+        return res.send({data: response}).render("ApiCache");
 
     } catch(err){
-        return res.json({
+        const response = {
             "success": false,
             "error_code": 500,
-            "message": err.message,
+            "message": "Unable to fetch Repository OR Wrong Repository name",
             "data": null
-        });
+        };
+
+        return res.send({data: response}).render("ApiCache");
     }
 };
 
-const rateLimiting = async(req,res) => {
-    const value = await axios.get('https://api64.ipify.org?format=json');
-    const userIp = value.data.ip;
+const loginPage = async(req,res) => {
+    const email = req.body.email.toString();
+    const password = req.body.password.toString();
 
-    const requests = await redis.incr(userIp);
-    let ttl;
-
-    if(requests == 1){
-        await redis.expire(userIp, 60);
-        ttl = 60;
-    }
-    else{
-        ttl = await redis.ttl(userIp);
-    }
-
-    if(requests > 5){
-        return res.json({
+    if(!email || !password){
+        const response = {
             "success": false,
-            "error_code": 503,
-            "message": "Maximum 5 requests in one minute",
-            "data": {
-                "calls": requests,
-                "ttl": ttl
-            }
-        });
+            "error_code": 500,
+            "message": "Please provide email and Password",
+            "data": null
+        };
+
+        return res.send({data: response}).render("loginPage");
     }
 
-    return res.json({
+    if(email.tolowerCase() !== 'admin@gmail.com'){
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Email provided is Incorrect",
+            "data": null
+        };
+
+        return res.send({data: response}).render("loginPage");
+    }
+
+    if(password !== 'admin'){
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Password provided is Incorrect",
+            "data": null
+        };
+
+        return res.send({data: response}).render("loginPage");
+    }
+
+    const response = {
         "success": true,
         "error_code": 200,
-        "message": "Successfully made the request",
+        "message": "Login Successful",
         "data": {
-            "calls": requests,
-            "ttl": ttl
+            "email": email,
+            "password": password,
+            "Time": Date.now,
+            "Requests": requests
         }
-    });
+    };
+
+    return res.send({data: response}).render("loginPage");
 };
 
 module.exports = {
     apiCaching,
-    rateLimiting
+    loginPage
 }
