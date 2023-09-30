@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "axios": "^1.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "nodemon": "^3.0.1"
+  },
+  "name": "apicaching-ratelimiting",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Manraj Singh",
+  "license": "ISC",
+  "description": "Testing redis database for caching and rate limiting"
+}
