@@ -190,15 +190,10 @@ const updateLeaderBoard = async(req,res) => {
             res.status(500).json({ error: 'Internal Server Error' });
         }
         else {
-            publishLeaderboardUpdate();
             res.redirect('leader-board');
         }
     });
 };
-
-function publishLeaderboardUpdate() {
-  redis.publish('leaderboardUpdate', 'Leaderboard has been updated');
-}
 
 module.exports = {
     apiCaching,
