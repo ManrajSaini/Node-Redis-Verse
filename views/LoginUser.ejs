@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .login-container {
+            margin-bottom: 5px;
+        }
+
+        .login-input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid white;
+            border-radius: 5px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .login-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: large;
+        }
+
+        #login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .back-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: medium;
+        }
+
+        .snackbar {
+            display: none;
+            min-width: 250px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <p>Login here with correct email,password and enjoy a 2mins login free Session<br>
+        You try playing with wrong/invalid credentials, You wont be successfully logging In.</p>
+        <form id="login-form" method="POST" action="login-user">
+            <div class="login-container">
+                <input class="login-input" type="text" name="email" placeholder="Email" required>
+            </div>
+            <div class="login-container">
+                <input class="login-input" type="password" name="password" placeholder="Password" required>
+            </div>
+            <button class="login-button" type="submit">Login</button>
+        </form>
+
+        <div id="snackbar" class="snackbar"></div>
+        <a class="back-button" href="register-user">Go Back to Register</a>
+    </div>
+
+    <script>
+        function showSnackbar(message) {
+            var snackbar = document.getElementById("snackbar");
+            snackbar.innerHTML = message;
+            snackbar.className = "";
+            setTimeout(function () {
+                snackbar.className = "snackbar";
+            }, 5000);
+        }
+
+
+        var flag = "<%= data.success %>";
+        if (flag === 'false') {
+            showSnackbar('<%= data.message %>');
+        }
+    </script>
+</body>
+
+</html>

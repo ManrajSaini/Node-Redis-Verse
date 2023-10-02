@@ -195,9 +195,96 @@ const updateLeaderBoard = async(req,res) => {
     });
 };
 
+const registerUser = async(req,res) => {
+    const email = req.body.email.toLowerCase();
+    const password = req.body.password;
+
+    if(!email || !password){
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Please provide email and Password",
+            "data": null
+        };
+
+        return res.render("RegisterUser", { data: response });
+    }
+
+    if(email === req.session.email && password !== req.session.password){
+
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Email already registered, Provide correct Password",
+            "data": null
+        };
+
+        return res.render("RegisterUser", { data: response });
+    }
+
+    if(email === req.session.email && password === req.session.password){
+
+        req.session.loggedIn = true;
+        return res.redirect('login-user')
+    }
+
+    req.session.loggedIn = false;
+    req.session.email = email;
+    req.session.password = password;
+
+    res.redirect('login-user');
+};
+
+
+const loginUser = async(req,res) => {
+    const email = req.body.email.toLowerCase();
+    const password = req.body.password;
+
+    if(!email || !password){
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Please provide email and Password",
+            "data": null
+        };
+
+        return res.render("LoginUser", {data: response});
+    }
+
+    if(email !== req.session.email){
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Please provide correct email or Your session was Expired",
+            "data": null
+        };
+
+        return res.render("LoginUser", {data: response});
+    }
+
+    if(password !== req.session.password){
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": "Please provide correct password or Your session was Expired",
+            "data": null
+        };
+
+        return res.render("LoginUser", {data: response});
+    }
+
+    req.session.loggedIn = true;
+    req.session.email = email;
+    req.session.password = password;
+
+    res.redirect('success-user');
+};
+
 module.exports = {
     apiCaching,
     loginPage,
     getLeaderBoard,
-    updateLeaderBoard
+    updateLeaderBoard,
+    registerUser,
+    loginUser
 }

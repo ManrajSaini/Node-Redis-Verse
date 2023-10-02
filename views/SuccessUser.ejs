@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-size: 25px;
+            text-align: center;
+            padding: 10px 90px;
+        }
+
+        .back-button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .success {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        
+        <h1 class="success">Welcome, <%= email %>!</h1>
+
+        <p>Click on Logout to destroy the session</p>
+        <p>But first try the newly built session, so click on go to register page and try logging in using login in as old user, and
+            you will not be asked to enter boring email, password, direct login in to this success page</p>
+
+        <a class="back-button" href="logout-user">Logout</a>
+        <a class="back-button" href="register-user">Go to Register Page</a>
+    </div>
+</body>
+
+</html>
