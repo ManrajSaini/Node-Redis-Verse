@@ -47,6 +47,12 @@ testRouter.get('/logout-user', (req, res) => {
 testRouter.post("/register-user", testController.registerUser);
 testRouter.post("/login-user", testController.loginUser);
 
+testRouter.get("/get-places", (req,res) => {
+    res.render("Map");
+});
+
+testRouter.post("/get-places", testController.findPlaces);
+
 testRouter.post("/api-caching", testController.apiCaching);
 testRouter.post("/login-page", rateLimiter, testController.loginPage);
 testRouter.post("/leader-board", testController.updateLeaderBoard);

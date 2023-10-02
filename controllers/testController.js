@@ -280,11 +280,21 @@ const loginUser = async(req,res) => {
     res.redirect('success-user');
 };
 
+
+const findPlaces = async(req,res) => {
+    let { lat, lon, radius } = req.body;
+
+    const locations = await redis.geosearch('places', 'FROMLONLAT', lon, lat, 'BYRADIUS', radius, 'km', 'ASC', 'WITHDIST');
+
+    res.render('LocResult', { locations });
+};
+
 module.exports = {
     apiCaching,
     loginPage,
     getLeaderBoard,
     updateLeaderBoard,
     registerUser,
-    loginUser
+    loginUser,
+    findPlaces
 }

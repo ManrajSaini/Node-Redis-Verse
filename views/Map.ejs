@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo Locator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-size: large;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #map {
+            height: 400px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 96%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Distance Finder and Locator</h1>
+        <form action="get-places" method="POST">
+            <div id="map"></div>
+            <input type="hidden" id="latitude" name="lat">
+            <input type="hidden" id="longitude" name="lon">
+            <input type="text" name="radius" placeholder="Enter Radius (in kilometers)" required>
+            <button type="submit">Search</button>
+            <p>
+                Here is a Map given, you can zoom in/out and place a marker anywhere on the map (clicking on map), then add Radius in input bar.<br>
+                After hitting Search, you will be displayed with various locations within the given radius of marked location on map.
+            </p>
+        </form>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const map = L.map('map').setView([30.75933815847378, 76.77376124636227], 14); // Initial map coordinates
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+
+            let marker;
+
+            map.on('click', (e) => {
+
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+
+                marker = L.marker(e.latlng).addTo(map);
+
+                latitudeInput.value = e.latlng.lat;
+                longitudeInput.value = e.latlng.lng;
+            });
+        });
+    </script>
+</body>
+
+</html>

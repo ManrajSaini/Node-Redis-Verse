@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <title>Search Results</title>
+    <style>
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: auto;
+            padding: auto;
+
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-size: medium;
+            padding-top: 0px;
+        }
+
+        .container p{
+            margin-top: 0;
+        }
+
+        .store-table {
+            width: 50%;
+            margin: 8px;
+            border-collapse: collapse;
+        }
+
+    
+        .store-table th,
+        .store-table td {
+            border: 2px solid white;
+            text-align: center;
+            padding: 8px 17px;
+        }
+
+        .store-table th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #717070;
+        }
+
+        .back-button {
+            background-color: #333;
+            color: white;
+            padding: 8px 20px;
+            margin-top: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        <p>Note: The Distance's are in km(s) and are measured in a Straight Line</p>
+        <% if (locations.length> 0) { %>
+            <table class="store-table">
+                <tr>
+                    <th>Location Name</th>
+                    <th>Distance (km)</th>
+                </tr>
+                <% for (let i=0; i < locations.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= locations[i][0] %>
+                        </td>
+                        <td>
+                            <%= locations[i][1] %>
+                        </td>
+                    </tr>
+                <% } %>
+            </table>
+        <% } else { %>
+            <p>No stores found within the specified radius.</p>
+        <% } %>
+
+    <a class="back-button" href="get-places">Search Again</a>
+    <a class="back-button" href="/">Home</a>
+    </div>
+
+</body>
+
+</html>
