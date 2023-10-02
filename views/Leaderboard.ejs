@@ -37,6 +37,7 @@
         table {
             border: 2px solid white;
             margin: 0 auto;
+            margin-bottom: 15px;
         }
     
         th,
@@ -53,6 +54,16 @@
         tr:nth-child(even) {
             background-color: #555;
         }
+
+        .back-button{
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -63,29 +74,29 @@
     <ul>
         <li>
             <form method="POST" action="leader-board">
-                <input type="hidden" name="username" value="Manraj">
-                <button type="submit">Manraj</button>
+                <input type="hidden" name="username" value="Manraj Singh">
+                <button type="submit">Manraj Singh</button>
             </form>
         </li>
 
         <li>
             <form method="POST" action="leader-board">
-                <input type="hidden" name="username" value="Sanchit">
-                <button type="submit">Sanchit</button>
+                <input type="hidden" name="username" value="Sanchit Chhabra">
+                <button type="submit">Sanchit Chhabra</button>
             </form>
         </li>
 
         <li>
             <form method="POST" action="leader-board">
-                <input type="hidden" name="username" value="Sachit">
-                <button type="submit">Sachit</button>
+                <input type="hidden" name="username" value="Sachit Sharma">
+                <button type="submit">Sachit Sharma</button>
             </form>
         </li>
 
         <li>
             <form method="POST" action="leader-board">
-                <input type="hidden" name="username" value="Pratham">
-                <button type="submit">Pratham</button>
+                <input type="hidden" name="username" value="Pratham Grover">
+                <button type="submit">Pratham Grover</button>
             </form>
         </li>
 
@@ -153,6 +164,8 @@
             </tr>
             <% } %>
     </table>
+
+    <a href="/" class="back-button">Home</a>
 
 </body>
 
