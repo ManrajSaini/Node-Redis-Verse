@@ -159,7 +159,50 @@ const loginPage = async(req,res) => {
     return res.send({ data: response }).render("LoginPage");
 };
 
+
+const getLeaderBoard = async(req,res) => {
+    redis.zrevrange('leaderboard', 0, -1, 'WITHSCORES', (err, reply) => {
+        if (err) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        } 
+        
+        else {
+            const leaderboard = [];
+
+            for (let i = 0; i < reply.length; i += 2) {
+                leaderboard.push({
+                    username: reply[i],
+                    score: parseInt(reply[i + 1]),
+                });
+            }
+
+            res.render('Leaderboard', { leaderboard });
+        }
+    }); 
+};
+
+
+const updateLeaderBoard = async(req,res) => {
+    const { username } = req.body;
+
+    redis.zincrby('leaderboard', 10, username, (err, reply) => {
+        if (err) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else {
+            publishLeaderboardUpdate();
+            res.redirect('leader-board');
+        }
+    });
+};
+
+function publishLeaderboardUpdate() {
+  redis.publish('leaderboardUpdate', 'Leaderboard has been updated');
+}
+
 module.exports = {
     apiCaching,
-    loginPage
+    loginPage,
+    getLeaderBoard,
+    updateLeaderBoard
 }

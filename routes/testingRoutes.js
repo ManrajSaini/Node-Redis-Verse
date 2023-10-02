@@ -10,10 +10,13 @@ testRouter.get("/api-caching", (req,res) => {
 });
 
 testRouter.get("/login-page", (req,res) => {
-    res.render("loginPage");
+    res.render("LoginPage");
 });
+
+testRouter.get("/leader-board", testController.getLeaderBoard);
 
 testRouter.post("/api-caching", testController.apiCaching);
 testRouter.post("/login-page", rateLimiter, testController.loginPage);
+testRouter.post("/leader-board", testController.updateLeaderBoard);
 
 module.exports = testRouter;
