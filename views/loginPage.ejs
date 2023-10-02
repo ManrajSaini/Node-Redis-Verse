@@ -24,8 +24,7 @@
         }
 
         .login-container {
-            margin-bottom: 20px;
-            
+            margin-bottom: 5px;
         }
 
         .login-input {
@@ -48,10 +47,33 @@
             cursor: pointer;
         }
 
-        #login-form{
+        #login-form {
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .info{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            font-size:large;
+        }
+
+        .back-button{
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .login-error, .success{
+            text-align: center;
+            margin-bottom: 10px;
         }
 
     </style>
@@ -60,19 +82,138 @@
 <body>
     <div class="container">
         <h1>Login Page</h1>
-        <div class="login-container">
+        <div class="info">
+            <p>
+                This page demonstrates the power of redis via rate limiting.<br>
+                If you make more than 5 invalid/wrong requests within 2 mins, then you would be Rate limited for some time.<br>
+            </p>
+            
+            <p>
+                Try making request with following valid credentials:<br>
+                Email : admin@gmail.com<br>
+                Password : admin<br>
+                You will be successfully logged in!<br>
+            </p>
+            
+            <p>
+                Now try making requests using invalid credentials, more than 5 times within 2 mins.<br>
+                You will be Rate Limited!<br>
+            </p>
+        </div>
+        
+        <div class="login-container" id="login-container">
             <form id="login-form">
                 <input type="email" class="login-input" name="email" placeholder="Email">
                 <input type="password" class="login-input" name="password" placeholder="Password">
                 <button type="submit" class="login-button">Login</button>
             </form>
         </div>
-        
+
+        <div id="success" class="success"></div>
         <div id="login-error" class="login-error"></div>
+        <a href="/" class="back-button">Home</a>
     </div>
 
     <script>
-        // Your JavaScript for handling form submission and displaying errors here
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            const success = document.getElementById('success');
+
+            
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formData = new FormData(loginForm);
+                const emailValue = formData.get('email');
+                const passwordValue = formData.get('password'); 
+                
+                const data = {
+                    email: emailValue,
+                    password: passwordValue
+                };
+
+                try {
+                    const result = await fetch('login-page', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    }).then(response => response.json());
+
+                    if(result.data.blocked){
+                        loginForm.innerHTML = '';
+                        loginError.innerHTML = '';
+
+                        const requests = result.data.data.requests;
+                        const ttl = result.data.data.ttl;
+
+                        const msgSec = document.createElement('h3');
+                        msgSec.textContent = `You have made more than 5 requests within 2 mins, So you are rate limited. Wait for some time to login again.`;
+                        loginError.appendChild(msgSec);
+
+                        const ttlSec = document.createElement('h3');
+                        ttlSec.textContent = `Time to wait for another request : ${ttl}sec`;
+                        loginError.appendChild(ttlSec);
+
+                        const link = document.createElement('a');
+                        link.textContent = 'Login Again';
+                        link.href = 'login-page'; 
+                        link.className = 'back-button'
+                        loginError.appendChild(link);
+                    }
+
+                    else if(!result.data.success){
+                        loginError.innerHTML = '';
+
+                        const requests = result.data.data.requests;
+                        const ttl = result.data.data.ttl;
+                        const msg = result.data.message;
+
+                        const msgSec = document.createElement('h3');
+                        msgSec.textContent = `${msg}`;
+                        loginError.appendChild(msgSec);
+
+                        const reqSec = document.createElement('h3');
+                        reqSec.textContent = `Number of Requests (per 2 min) : ${requests}`;
+                        loginError.appendChild(reqSec);
+
+                        const ttlSec = document.createElement('h3');
+                        ttlSec.textContent = `Time to wait for another request : ${ttl}sec`;
+                        loginError.appendChild(ttlSec);
+                    }
+
+                    else if(result.data.success){
+                        loginForm.innerHTML = '';
+                        loginError.innerHTML = '';
+                        const email = result.data.data.email;
+                        const password = result.data.data.password;
+
+                        const successMsg = document.createElement('h2');
+                        successMsg.textContent = "Successfully Logged In";
+                        success.appendChild(successMsg);
+
+                        const emailSec = document.createElement('h3');
+                        emailSec.textContent = `Email : ${email}`;
+                        success.appendChild(emailSec);
+
+                        const passwordSec = document.createElement('h3');
+                        passwordSec.textContent = `Password : ${password}`;
+                        success.appendChild(passwordSec);
+
+                        const link = document.createElement('a');
+                        link.textContent = 'Login Again';
+                        link.href = 'login-page';
+                        link.className = 'back-button'
+                        loginError.appendChild(link);
+                    }
+
+                } catch (error) {
+                
+                    loginError.textContent = `Error: ${error.message}`;
+                }
+            });
+        });
     </script>
 </body>
 

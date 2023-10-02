@@ -81,42 +81,70 @@ const apiCaching = async(req,res) => {
     }
 };
 
+
 const loginPage = async(req,res) => {
+
+    const userIp = req.userIp;
+    const requests = req.requests;
+
     const email = req.body.email.toString();
     const password = req.body.password.toString();
 
     if(!email || !password){
+
+        const ttl = await redis.ttl(userIp);
+
         const response = {
             "success": false,
             "error_code": 500,
             "message": "Please provide email and Password",
-            "data": null
+            "blocked": false,
+            "data": {
+                requests: requests,
+                ttl: ttl
+            }
         };
 
-        return res.send({data: response}).render("loginPage");
+        return res.send({data: response}).render("LoginPage");
     }
 
-    if(email.tolowerCase() !== 'admin@gmail.com'){
+    if(email.toLowerCase() !== 'admin@gmail.com'){
+
+        const ttl = await redis.ttl(userIp);
+
         const response = {
             "success": false,
             "error_code": 500,
             "message": "Email provided is Incorrect",
-            "data": null
+            "blocked": false,
+            "data": {
+                requests: requests,
+                ttl: ttl
+            }
         };
 
-        return res.send({data: response}).render("loginPage");
+        return res.send({data: response}).render("LoginPage");
     }
 
     if(password !== 'admin'){
+
+        const ttl = await redis.ttl(userIp);
+ 
         const response = {
             "success": false,
             "error_code": 500,
             "message": "Password provided is Incorrect",
-            "data": null
+            "blocked": false,
+            "data": {
+                requests: requests,
+                ttl: ttl
+            }
         };
 
-        return res.send({data: response}).render("loginPage");
+        return res.send({data: response}).render("LoginPage");
     }
+
+    await redis.setex(userIp, 120, 0);
 
     const response = {
         "success": true,
@@ -124,13 +152,11 @@ const loginPage = async(req,res) => {
         "message": "Login Successful",
         "data": {
             "email": email,
-            "password": password,
-            "Time": Date.now,
-            "Requests": requests
+            "password": password
         }
     };
 
-    return res.send({data: response}).render("loginPage");
+    return res.send({ data: response }).render("LoginPage");
 };
 
 module.exports = {

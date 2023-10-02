@@ -132,7 +132,6 @@
                     const retrivedFrom = result.data.message;
                     const ttl = result.data.data.ttl;
 
-                    // Create and append elements to the result container
                     const h2 = document.createElement('h2');
                     h2.textContent = 'Search Result:';
                     resultContainer.appendChild(h2);
@@ -161,10 +160,9 @@
                     snackbar.textContent = `${result.data.message}`;
                     snackbar.style.display = 'block';
 
-                    // Hide the snackbar after a few seconds (adjust the delay as needed)
                     setTimeout(() => {
                         snackbar.style.display = 'none';
-                        snackbar.textContent = ''; // Clear the message
+                        snackbar.textContent = ''; 
                     }, 5000);
                 };
             });

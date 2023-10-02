@@ -1,53 +1,53 @@
 const redis = require("../config/connectDB");
 const axios = require("axios");
 
-const rateLimiting = async(req,res,next) => {
+const rateLimiter = async(req,res,next) => {
     try{
         const value = await axios.get('https://api64.ipify.org?format=json');
         const userIp = value.data.ip;
 
         const requests = await redis.incr(userIp);
-        let ttl;
 
         if(requests == 1){
-            await redis.expire(userIp, 60);
-            ttl = 60;
+            await redis.expire(userIp, 120);
+            ttl = 120;
         }
         else{
             ttl = await redis.ttl(userIp);
         }
 
         if(requests > 5){
-            return res.json({
+
+            const response = {
                 "success": false,
-                "error_code": 503,
-                "message": "Maximum 5 requests in one minute",
+                "error_code": 403,
+                "message": "Wait for some time to Login In again",
+                "blocked": true,
                 "data": {
-                    "calls": requests,
-                    "ttl": ttl
+                    requests: requests,
+                    ttl: ttl
                 }
-            });
+            };
+
+            return res.send({data: response}).render("LoginPage");
         }
 
-        return res.json({
-            "success": true,
-            "error_code": 200,
-            "message": "Successfully made the request",
-            "data": {
-                "calls": requests,
-                "ttl": ttl
-            }
-        });
-    } 
+        req.userIp = userIp;
+        req.requests = requests;
+        next();
+       
+    }
+
     catch(err){
-        return res.json({
-            "success": true,
-            "error_code": 200,
-            "message": "Successfully made the request",
-            "data": {
-                "calls": requests,
-                "ttl": ttl
-            }
-        });
+        const response = {
+            "success": false,
+            "error_code": 500,
+            "message": err.message,
+            "data": null
+        };
+
+        return res.send({data: response}).render("LoginPage");
     }
 };
+
+module.exports = {rateLimiter};

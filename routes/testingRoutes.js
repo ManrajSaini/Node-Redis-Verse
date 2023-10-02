@@ -1,6 +1,7 @@
 const express = require("express");
 
 const testController = require("../controllers/testController");
+const {rateLimiter} = require("../middlewares/rateLimiter");
 
 testRouter = express.Router();
 
@@ -13,6 +14,6 @@ testRouter.get("/login-page", (req,res) => {
 });
 
 testRouter.post("/api-caching", testController.apiCaching);
-testRouter.post("/login-page", testController.loginPage);
+testRouter.post("/login-page", rateLimiter, testController.loginPage);
 
 module.exports = testRouter;
