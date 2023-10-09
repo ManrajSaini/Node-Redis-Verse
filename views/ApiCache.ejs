@@ -22,10 +22,16 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .container h1{
+            margin-bottom: 0px;
         }
 
         .search-container {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .para{
@@ -83,7 +89,8 @@
 <body>
     <div class="container">
         <h1>API Cache Page</h1>
-        <p class="para">Here we fetch the real-time <b>github repository stars</b> from github. And API caching is done with help of Redis. Where at <b>1'st request user will get response from Github directly</b> within X miliseconds, after that if user <b>requests again for same repository within 30 seconds of 1'st request, then he will get the cached response from Redis</b> in approx. X/10 miliseconds</p>
+        <p class="para">Here we fetch the real-time <b>github repository stars</b> from github. And API caching is done with help of Redis. Where at <b>1'st request user will get response from Github directly</b> within X miliseconds, after that if user <b>requests again for same repository within 30 seconds of 1'st request, then he will get the cached response from Redis</b> in approx. X/2 miliseconds</p>
+        <p class="para">Note : I have hosted my site on Render using free database service, the difference in fetch time from remote and redis might not be correct, try using this on localhost (local machine) for accurate results.</p>
         <div class="search-container">
             <form id="search-form">
                 <input type="text" class="search-input" name="query" placeholder="Repository name (eg angular/angular)">
@@ -149,7 +156,7 @@
                     resultContainer.appendChild(msgParagraph);
 
                     const ttlParagraph = document.createElement('p');
-                    ttlParagraph.textContent = `Time to Live: ${ttl}`;
+                    ttlParagraph.textContent = `Time to Live: ${ttl} sec`;
                     resultContainer.appendChild(ttlParagraph);
                     
                 }

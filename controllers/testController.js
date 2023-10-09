@@ -45,14 +45,24 @@ const apiCaching = async(req,res) => {
 
         const githubResponse = await axios.get(`https://api.github.com/repos/${repo}`);
 
+        endTime = Date.now();
+
+        if(!githubResponse){
+            const response = {
+                "success": false,
+                "error_code": 500,
+                "message": "Unable to fetch Repository OR Wrong Repository name",
+                "data": null
+            };
+
+            return res.send({data: response}).render("ApiCache");
+        }
+
         const stars = githubResponse.data.stargazers_count;
 
-        endTime = Date.now();
         timeRet = endTime - startTime;
         
-        if(stars){
-            await redis.setex(repo, 30, stars);
-        }
+        await redis.setex(repo, 30, stars);
 
         ttl = await redis.ttl(repo);
 

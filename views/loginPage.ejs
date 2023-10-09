@@ -167,7 +167,6 @@
                         loginError.innerHTML = '';
 
                         const requests = result.data.data.requests;
-                        const ttl = result.data.data.ttl;
                         const msg = result.data.message;
 
                         const msgSec = document.createElement('h3');
@@ -175,12 +174,8 @@
                         loginError.appendChild(msgSec);
 
                         const reqSec = document.createElement('h3');
-                        reqSec.textContent = `Number of Requests (per 2 min) : ${requests}`;
+                        reqSec.textContent = `Number of Wrong Requests (per 2 min) : ${requests}`;
                         loginError.appendChild(reqSec);
-
-                        const ttlSec = document.createElement('h3');
-                        ttlSec.textContent = `Time to wait for another request : ${ttl}sec`;
-                        loginError.appendChild(ttlSec);
                     }
 
                     else if(result.data.success){
