@@ -2,8 +2,8 @@ const redis = require("../config/connectDB");
 
 const rateLimiter = async(req,res,next) => {
     try{
-        let forwarded = req.headers['x-forwarded-for'];
-        let userIp = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+        let forwarded = 1//req.headers['x-forwarded-for'];
+        let userIp = 1//forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
 
         const requests = await redis.incr(userIp);
 
