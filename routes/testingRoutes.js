@@ -5,16 +5,32 @@ const {rateLimiter} = require("../middlewares/rateLimiter");
 
 testRouter = express.Router();
 
+// *************API Caching*******************
 testRouter.get("/api-caching", (req,res) => {
     res.render("ApiCache");
 });
 
+testRouter.post("/api-caching", testController.apiCaching);
+
+
+
+// ***************Rate Limiting******************* 
 testRouter.get("/login-page", (req,res) => {
     res.render("loginPage");
 });
 
+testRouter.post("/login-page", rateLimiter, testController.loginPage);
+
+
+
+// ***************Real Time LeaderBoard******************* 
 testRouter.get("/leader-board", testController.getLeaderBoard);
 
+testRouter.post("/leader-board", testController.updateLeaderBoard);
+
+
+
+// ***************Redis Server Sessions********************
 testRouter.get("/register-user", (req,res) => {
     res.render("RegisterUser", {data: {success: true}});
 });
@@ -47,14 +63,14 @@ testRouter.get('/logout-user', (req, res) => {
 testRouter.post("/register-user", testController.registerUser);
 testRouter.post("/login-user", testController.loginUser);
 
+
+
+// ******************** Geo-Spatial Index's ********************
 testRouter.get("/get-places", (req,res) => {
     res.render("Map");
 });
 
 testRouter.post("/get-places", testController.findPlaces);
 
-testRouter.post("/api-caching", testController.apiCaching);
-testRouter.post("/login-page", rateLimiter, testController.loginPage);
-testRouter.post("/leader-board", testController.updateLeaderBoard);
 
 module.exports = testRouter;
