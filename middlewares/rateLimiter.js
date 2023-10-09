@@ -1,9 +1,10 @@
 const redis = require("../config/connectDB");
+const axios = require("axios");
 
 const rateLimiter = async(req,res,next) => {
     try{
-        let forwarded = 1//req.headers['x-forwarded-for'];
-        let userIp = 1//forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+        const value = await axios.get('https://api64.ipify.org?format=json');
+        const userIp = value.data.ip;
 
         const requests = await redis.incr(userIp);
 
@@ -28,7 +29,7 @@ const rateLimiter = async(req,res,next) => {
                 }
             };
 
-            return res.send({data: response}).render("LoginPage");
+            return res.send({data: response}).render("loginPage");
         }
 
         req.userIp = userIp;
@@ -45,7 +46,7 @@ const rateLimiter = async(req,res,next) => {
             "data": null
         };
 
-        return res.send({data: response}).render("LoginPage");
+        return res.send({data: response}).render("loginPage");
     }
 };
 

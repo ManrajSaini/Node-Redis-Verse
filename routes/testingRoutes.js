@@ -10,7 +10,7 @@ testRouter.get("/api-caching", (req,res) => {
 });
 
 testRouter.get("/login-page", (req,res) => {
-    res.render("LoginPage");
+    res.render("loginPage");
 });
 
 testRouter.get("/leader-board", testController.getLeaderBoard);

@@ -115,7 +115,7 @@ const loginPage = async(req,res) => {
             }
         };
 
-        return res.send({data: response}).render("LoginPage");
+        return res.send({data: response}).render("loginPage");
     }
 
     if(email.toLowerCase() !== 'admin@gmail.com'){
@@ -133,7 +133,7 @@ const loginPage = async(req,res) => {
             }
         };
 
-        return res.send({data: response}).render("LoginPage");
+        return res.send({data: response}).render("loginPage");
     }
 
     if(password !== 'admin'){
@@ -151,7 +151,7 @@ const loginPage = async(req,res) => {
             }
         };
 
-        return res.send({data: response}).render("LoginPage");
+        return res.send({data: response}).render("loginPage");
     }
 
     await redis.setex(userIp, 120, 0);
@@ -166,7 +166,7 @@ const loginPage = async(req,res) => {
         }
     };
 
-    return res.send({ data: response }).render("LoginPage");
+    return res.send({ data: response }).render("loginPage");
 };
 
 
