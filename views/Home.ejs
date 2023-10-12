@@ -23,7 +23,7 @@
             border: 2px solid white;
             padding: 20px;
             text-align: center;
-            
+            border-radius: 20px;
         }
 
         .button {
@@ -37,7 +37,7 @@
             border: 1px solid white;
             border-radius: 5px;
             margin: auto;
-            margin-top: 10px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -45,9 +45,7 @@
 <body>
     <div class="container">
         <h1>Redis Use-Cases</h1>
-        <form action="api-testing/api-caching">
-            <button type="submit" class="button">API Cache Page</button>
-        </form>
+        
         <form action="api-testing/login-page">
             <button type="submit" class="button">Rate Limiting Page</button>
         </form>
@@ -59,6 +57,9 @@
         </form>
         <form action="api-testing/get-places">
             <button type="submit" class="button">Geospatial Indexing</button>
+        </form>
+        <form action="api-testing/api-caching">
+            <button type="submit" class="button">API Cache Page</button>
         </form>
     </div>
 </body>
