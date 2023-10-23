@@ -50,7 +50,7 @@ const apiCaching = async(req,res) => {
         if(!githubResponse){
             const response = {
                 "success": false,
-                "error_code": 500,
+                "error_code": 401,
                 "message": "Unable to fetch Repository OR Wrong Repository name",
                 "data": null
             };
