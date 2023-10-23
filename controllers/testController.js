@@ -43,10 +43,9 @@ const apiCaching = async(req,res) => {
 
         startTime = Date.now();
 
-        console.log(repo);
+        console.log(`https://api.github.com/repos/${repo}`);
         const githubResponse = await axios.get(`https://api.github.com/repos/${repo}`);
         
-
         endTime = Date.now();
 
         if(!githubResponse){
