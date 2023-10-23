@@ -19,11 +19,7 @@ const apiCaching = async(req,res) => {
         }
 
         startTime = Date.now();
-
-        console.log("before redis");
         const value = await redis.get(repo);
-        console.log("after redis");
-
 
         if(value){
             endTime = Date.now();
@@ -46,7 +42,9 @@ const apiCaching = async(req,res) => {
         }
 
         startTime = Date.now();
+        console.log("before github api");
         const githubResponse = await axios.get(`https://api.github.com/repos/${repo}`);
+        console.log("after github api");
 
         endTime = Date.now();
 
