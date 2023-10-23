@@ -24,9 +24,9 @@ const apiCaching = async(req,res) => {
         if(value){
             endTime = Date.now();
             timeRet = endTime - startTime;
-
+            console.log("hello1");
             ttl = await redis.ttl(repo);
-
+            console.log("hello2");
             const response = {
                 "success": true,
                 "error_code": 200,
@@ -42,9 +42,7 @@ const apiCaching = async(req,res) => {
         }
 
         startTime = Date.now();
-        console.log("before github api");
         const githubResponse = await axios.get(`https://api.github.com/repos/${repo}`);
-        console.log("after github api");
 
         endTime = Date.now();
 
